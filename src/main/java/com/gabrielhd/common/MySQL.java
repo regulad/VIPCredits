@@ -1,6 +1,5 @@
 package com.gabrielhd.common;
 
-import com.gabrielhd.bcredits.Main;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
@@ -27,7 +26,7 @@ public class MySQL {
     private final HikariConfig hikariConfig = new HikariConfig();
     private @Nullable HikariDataSource hikariDataSource;
 
-    public MySQL(String host, int port, String database, String username, String password) {
+    public MySQL(String host, int port, String database, String username, String password, String tableName) {
         if (instance != null) {
             throw new RuntimeException("instance declared twice");
         } else {
@@ -39,7 +38,7 @@ public class MySQL {
         this.database = database;
         this.username = username;
         this.password = password;
-        this.table = Main.getInstance().getConfigUtils().getConfig("Settings").getString("MySQL.TableName");
+        this.table = tableName;
 
         try {
             setConnectionArguments();
@@ -124,9 +123,9 @@ public class MySQL {
     }
 
     public void createPlayer(UUID uuid, String playerName) {
-        try  (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
+        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
             if (!this.playerExists(uuid)) {
-                connection.createStatement().executeUpdate("INSERT INTO " + this.table + " (UUID, PlayerName, Credits, BungeeCredits) VALUES ('" +uuid + "', '" + playerName + "', '0', '0');");
+                connection.createStatement().executeUpdate("INSERT INTO " + this.table + " (UUID, PlayerName, Credits, BungeeCredits) VALUES ('" + uuid + "', '" + playerName + "', '0', '0');");
             }
         } catch (SQLException e) {
             e.printStackTrace();

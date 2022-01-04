@@ -43,7 +43,8 @@ public class Main extends Plugin {
             String database = this.configUtils.getConfig("Settings").getString("MySQL.Database");
             String username = this.configUtils.getConfig("Settings").getString("MySQL.Username");
             String password = this.configUtils.getConfig("Settings").getString("MySQL.Password");
-            this.mySQL = new MySQL(host, port, database, username, password);
+            String tableName = this.configUtils.getConfig("Settings").getString("MySQL.TableName");
+            this.mySQL = new MySQL(host, port, database, username, password, tableName);
         }
 
         this.getProxy().getPluginManager().registerListener(this, new LoginListener());

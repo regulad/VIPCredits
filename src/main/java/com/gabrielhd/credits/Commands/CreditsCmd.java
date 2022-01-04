@@ -1,10 +1,10 @@
 package com.gabrielhd.credits.Commands;
 
+import com.gabrielhd.common.TopPlayer;
 import com.gabrielhd.credits.Main;
 import com.gabrielhd.credits.Managers.ConfigManager;
 import com.gabrielhd.credits.Menu.Submenus.VIPMenu;
 import com.gabrielhd.credits.Player.CPlayer;
-import com.gabrielhd.common.TopPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,12 +1,12 @@
 package com.gabrielhd.credits;
 
+import com.gabrielhd.common.MySQL;
+import com.gabrielhd.common.TopPlayer;
 import com.gabrielhd.credits.Commands.CreditsCmd;
 import com.gabrielhd.credits.Hook.PlaceholderAPIHook;
 import com.gabrielhd.credits.Listeners.LoginListener;
 import com.gabrielhd.credits.Managers.ConfigManager;
 import com.gabrielhd.credits.Managers.PlayerManager;
-import com.gabrielhd.common.TopPlayer;
-import com.gabrielhd.common.MySQL;
 import com.gabrielhd.credits.Tasks.SaveDataTask;
 import com.gabrielhd.credits.Tasks.TopTask;
 import lombok.Getter;
@@ -38,7 +38,14 @@ public class Main extends JavaPlugin {
 
         new ConfigManager(this);
         FileConfiguration data = ConfigManager.getSettings();
-        new MySQL(data.getString("MySQL.Host"), data.getInt("MySQL.Port"), data.getString("MySQL.Database"), data.getString("MySQL.Username"), data.getString("MySQL.Password"));
+        new MySQL(
+                data.getString("MySQL.Host"),
+                data.getInt("MySQL.Port"),
+                data.getString("MySQL.Database"),
+                data.getString("MySQL.Username"),
+                data.getString("MySQL.Password"),
+                data.getString("MySQL.TableName")
+        );
 
         playerManager = new PlayerManager();
 
