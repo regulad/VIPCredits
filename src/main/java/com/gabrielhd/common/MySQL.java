@@ -40,22 +40,7 @@ public class MySQL {
         this.password = password;
         this.table = tableName;
 
-        try {
-            setConnectionArguments();
-        } catch (RuntimeException e) {
-            if (e instanceof IllegalArgumentException) {
-                System.out.println("Invalid database arguments! Please check your configuration!");
-                System.out.println("If this error persists, please report it to the developer!");
-                throw new IllegalArgumentException(e);
-            }
-            if (e instanceof HikariPool.PoolInitializationException) {
-                System.out.println("Can't initialize database connection! Please check your configuration!");
-                System.out.println("If this error persists, please report it to the developer!");
-                throw new HikariPool.PoolInitializationException(e);
-            }
-            System.out.println("Can't use the Hikari Connection Pool! Please, report this error to the developer!");
-            throw e;
-        }
+        setConnectionArguments();
 
         this.setupTable();
     }
@@ -63,6 +48,7 @@ public class MySQL {
     private synchronized void setConnectionArguments() throws RuntimeException {
         this.hikariConfig.setPoolName("Core MySQL");
         this.hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s%s/%s", this.host, port != 3306 ? ":" + port : "", this.database));
+        System.out.println("Connecting to " + this.hikariConfig.getJdbcUrl());
         this.hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
         this.hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         this.hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
