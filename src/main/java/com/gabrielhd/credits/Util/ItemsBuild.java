@@ -23,7 +23,6 @@ public class ItemsBuild {
         }
         item.setItemMeta(meta);
 
-        if (glow) EnchantGlow.addGlow(item);
         return item;
     }
 }
