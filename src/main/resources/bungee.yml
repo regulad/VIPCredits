@@ -1,0 +1,5 @@
+name: VIPCreditsBungee
+version: ${project.version}
+main: com.gabrielhd.bcredits.Main
+author: GabrielHD55
+description: Simple Credits system

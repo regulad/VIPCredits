@@ -1,0 +1,73 @@
+# =============== BungeeCord Only ===============
+
+# This message is only used by BungeeCord
+CreditsReceived: "&ayou received 100 credits for spending 30 minutes on the server"
+
+Counts:
+  # Minutes
+  Time: 30
+  Reward: 100
+
+# =================== Common ====================
+
+MySQL:
+  Host: 127.0.0.1
+  Port: 3306
+  TableName: Data_
+  Database: "Credits"
+  Username: "Credits"
+  Password: "Credits12345"
+
+# ================= Spigot Only =================
+
+DarCommand: true
+
+Messages:
+  NoPermissions: "&c&lYou have not permission"
+  PlayerNotOnline: "&c&lPlayer is not online!"
+  ReceiveCredits: "&aYou received %amount% credits"
+  GiveCredits: "&aYou gave %amount% credits"
+  SetCredits: "&aYou set %player%'s credit amount to %amount%"
+  TakeCredits: "&cYou took %amount% credits from %player%"
+  SentCredits: "&aYou sent %amount% credits to %player%"
+  PayerCredits: "&aYou received %amount% credits from %player%"
+  BroadcastGiveall: "&a&lAll players have received %amount% credits"
+  InsufficientPoints: "&cYou have insufficient credits to buy this"
+  CreditsBalance: "&a%player% has %credits% credits"
+  PurchaseStore: "&aPurchase made successfully"
+  DarCommandDisable: "&cThis command is disabled"
+  ResetCredits: "&c%player%'s credits have been reset"
+  HelpCmd:
+    - "&7&m---------------------"
+    - "  &e/creditos loja &7- &f"
+    - "  &e/creditos dar (player) (amount) &7- &f"
+    - "  &e/creditos ver [player]&7- &f"
+  HelpAdminCmd:
+    - "  &e/creditos (give/take/set) (player) (amount) &7- &f"
+    - "  &e/creditos reset (player)"
+    - "  &e/creditos giveall (amount)"
+    - "&7&m---------------------"
+  TopTitle: "&cBalance TOP"
+  TopLineFormat: "&f#%position% &7- &6%player% Credits: &e%credits%"
+
+Menu:
+  Title: "&aVIP Store"
+  Rows: 3
+  Backgroud:
+    ID: 160
+    Data: 0
+  Contents:
+    1:
+      Name: "&bDiamond"
+      ID: GOLD_INGOT
+      Data: 0
+      Slot: 11
+      Glow: true
+      Price: 15 #In Credits
+      Description:
+        - "&7Click to buy"
+        - "&bDiamonds"
+        - "&f"
+        - "&f&lPrice: 15"
+      Commands:
+        - "give %player% diamond 1"

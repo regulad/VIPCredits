@@ -3,11 +3,11 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>xyz.regulad</groupId>
-    <artifactId>spigottemplate</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>com.gabrielhd</groupId>
+    <artifactId>credits</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
-    <name>Spigot188Template</name>
+    <name>VIPCredits</name>
     <developers>
         <developer>
             <id>regulad</id>
@@ -16,7 +16,7 @@
         </developer>
     </developers>
     <description>
-        A template for plugins that use Spigot 1.8.8.
+        Commission
     </description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,8 +83,12 @@
                     <minimizeJar>true</minimizeJar>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>${project.groupId}.${project.artifactId}.dep.org.bstats</shadedPattern>
+                            <pattern>com.zaxxer</pattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.dep.com.zaxxer</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.slf4j</pattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.dep.org.slf4j</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -125,13 +129,21 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
     </repositories>
     <dependencies>
         <!--Minecraft-->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -140,12 +152,32 @@
             <version>1.2.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--Analytics-->
         <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
-            <scope>compile</scope>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <type>javadoc</type>
+            <scope>provided</scope>
+        </dependency>
+        <!--Dependencies-->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--MySQL-->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <!--Tools-->
         <dependency>

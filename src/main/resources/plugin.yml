@@ -1,6 +1,15 @@
-name: ${project.name}
-description: ${project.description}
+name: VIPCredits
 version: ${project.version}
-author: regulad # fixme
-
-main: ${project.groupId}.${project.artifactId}.${project.name}
+main: com.gabrielhd.credits.Main
+author: GabrielHD55
+description: Simple Credits system
+api-version: 1.13
+softdepend:
+  - PlaceholderAPI
+commands:
+  creditos:
+    usage: /<command>
+    aliases:
+      - points
+      - credits
+      - pontos
