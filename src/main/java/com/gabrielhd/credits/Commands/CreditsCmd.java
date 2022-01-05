@@ -1,5 +1,6 @@
 package com.gabrielhd.credits.Commands;
 
+import com.gabrielhd.common.TopPlayer;
 import com.gabrielhd.credits.Main;
 import com.gabrielhd.credits.Managers.ConfigManager;
 import com.gabrielhd.credits.Menu.Submenus.VIPMenu;
@@ -10,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,9 +51,7 @@ public class CreditsCmd implements CommandExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("baltop")) {
-                    HashMap<UUID, Integer> datas = Main.getTop();
-                    ArrayList<UUID> keys = new ArrayList<>(datas.keySet());
-                    ArrayList<Integer> values = new ArrayList<>(datas.values());
+                    ArrayList<TopPlayer> datas = Main.getTopCache();
 
                     // Already sorted.
 
@@ -60,11 +60,14 @@ public class CreditsCmd implements CommandExecutor {
                         if (i >= datas.size()) {
                             break;
                         } else {
-                            final UUID key = keys.get(i);
-                            final Integer value = values.get(i);
-                            if (value >= 1) {
-                                final OfflinePlayer listMember = Bukkit.getOfflinePlayer(key);
-                                sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TopLineFormat")).replace("%position%", String.valueOf((i + 1))).replace("%player%", player.getName()).replace("%credits%", String.valueOf(value)));
+                            final @NotNull TopPlayer currentTopPlayer = datas.get(i);
+                            if (currentTopPlayer.getCredits() >= 1) {
+                                final @NotNull String realName = currentTopPlayer.getPlayerName() != null ? currentTopPlayer.getPlayerName() : Bukkit.getOfflinePlayer(currentTopPlayer.getPlayerUuid()).getName();
+                                sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TopLineFormat")
+                                        .replace("%position%", String.valueOf((i + 1)))
+                                        .replace("%player%", realName)
+                                        .replace("%credits%", String.valueOf(currentTopPlayer.getCredits())
+                                        )));
                             }
                         }
                     }

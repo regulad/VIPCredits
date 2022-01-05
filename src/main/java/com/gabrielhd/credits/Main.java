@@ -1,6 +1,7 @@
 package com.gabrielhd.credits;
 
 import com.gabrielhd.common.MySQL;
+import com.gabrielhd.common.TopPlayer;
 import com.gabrielhd.credits.Commands.CreditsCmd;
 import com.gabrielhd.credits.Hook.PlaceholderAPIHook;
 import com.gabrielhd.credits.Listeners.LoginListener;
@@ -14,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ public class Main extends JavaPlugin {
     private static PlayerManager playerManager;
     @Getter
     @Setter
-    private static HashMap<UUID, Integer> top;
+    private static ArrayList<TopPlayer> topCache;
 
     public static String Color(String message) {
         return message.replace("&", "§");
@@ -57,7 +59,7 @@ public class Main extends JavaPlugin {
             new PlaceholderAPIHook().register();
         }
 
-        top = MySQL.getInstance().getTop();
+        topCache = MySQL.getInstance().getTop();
     }
 
     @Override

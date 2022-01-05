@@ -12,7 +12,7 @@ public class SaveDataTask implements Runnable {
         for (Player player : Bukkit.getOnlinePlayers()) {
             CPlayer cPlayer = Main.getPlayerManager().getCPlayer(player);
             if (cPlayer != null) {
-                MySQL.getInstance().setPoints(player.getUniqueId(), cPlayer.getCredits());
+                MySQL.getInstance().setPoints(player.getUniqueId(), player.getName(), cPlayer.getCredits());
 
                 cPlayer.setCredits(MySQL.getInstance().getPoints(player.getUniqueId()));
             }

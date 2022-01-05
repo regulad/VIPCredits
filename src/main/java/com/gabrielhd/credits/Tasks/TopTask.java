@@ -6,6 +6,6 @@ import com.gabrielhd.credits.Main;
 public class TopTask implements Runnable {
     @Override
     public void run() {
-        Main.setTop(MySQL.getInstance().getTop());
+        Main.setTopCache(MySQL.getInstance().getTop());
     }
 }
