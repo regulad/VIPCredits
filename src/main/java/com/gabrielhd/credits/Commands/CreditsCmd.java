@@ -1,20 +1,19 @@
 package com.gabrielhd.credits.Commands;
 
-import com.gabrielhd.common.TopPlayer;
 import com.gabrielhd.credits.Main;
 import com.gabrielhd.credits.Managers.ConfigManager;
 import com.gabrielhd.credits.Menu.Submenus.VIPMenu;
 import com.gabrielhd.credits.Player.CPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class CreditsCmd implements CommandExecutor {
     @Override
@@ -50,17 +49,23 @@ public class CreditsCmd implements CommandExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("baltop")) {
-                    List<TopPlayer> datas = new ArrayList<>(Main.getTop().values());
-                    datas.sort(Comparator.comparingInt(TopPlayer::getCredits));
-                    Collections.reverse(datas);
+                    HashMap<UUID, Integer> datas = Main.getTop();
+                    ArrayList<UUID> keys = new ArrayList<>(datas.keySet());
+                    ArrayList<Integer> values = new ArrayList<>(datas.values());
+
+                    // Already sorted.
 
                     sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TopTitle")));
                     for (int i = 0; i < 10; i++) {
                         if (i >= datas.size()) {
                             break;
-                        }
-                        if (datas.get(i).getCredits() >= 1) {
-                            sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TopLineFormat")).replace("%position%", String.valueOf((i + 1))).replace("%player%", datas.get(i).getPlayer()).replace("%credits%", String.valueOf(datas.get(i).getCredits())));
+                        } else {
+                            final UUID key = keys.get(i);
+                            final Integer value = values.get(i);
+                            if (value >= 1) {
+                                final OfflinePlayer listMember = Bukkit.getOfflinePlayer(key);
+                                sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TopLineFormat")).replace("%position%", String.valueOf((i + 1))).replace("%player%", player.getName()).replace("%credits%", String.valueOf(value)));
+                            }
                         }
                     }
                     return true;

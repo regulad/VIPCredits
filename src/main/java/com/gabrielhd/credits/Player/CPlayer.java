@@ -24,7 +24,7 @@ public class CPlayer {
         this.uuid = player.getUniqueId();
 
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            this.credits = MySQL.getInstance().getPoints(uuid, getPlayer().getName());
+            this.credits = MySQL.getInstance().getPoints(uuid);
         });
     }
 }

@@ -32,7 +32,7 @@ public class PlayerManager {
             CPlayer cPlayer = this.players.get(player.getUniqueId());
 
             Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () ->
-                    MySQL.getInstance().setPoints(player.getUniqueId(), player.getName(), cPlayer.getCredits()));
+                    MySQL.getInstance().setPoints(player.getUniqueId(), cPlayer.getCredits()));
 
             this.players.remove(player.getUniqueId());
         }

@@ -18,7 +18,7 @@ public class CountTask implements Runnable {
                 if (time >= config.getInt("Counts.Time")) {
                     if (Main.getInstance().getMySQL() != null) {
                         int result = config.getInt("Counts.Reward");
-                        new Thread(() -> Main.getInstance().getMySQL().addPoints(player.getUniqueId(), player.getName(), result)).start();
+                        new Thread(() -> Main.getInstance().getMySQL().addPoints(player.getUniqueId(), result)).start();
 
                         player.sendMessage(Main.Color(Main.getInstance().getConfigUtils().getConfig("Settings").getString("CreditsReceived")));
                         long oldTime = Main.getInstance().getSchedulers().get(player.getUniqueId());

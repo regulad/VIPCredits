@@ -2,14 +2,12 @@ package com.gabrielhd.common;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariPool;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -49,7 +47,6 @@ public class MySQL {
         this.hikariConfig.setPoolName("Core MySQL");
         this.hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s%s/%s", this.host, port != 3306 ? ":" + port : "", this.database));
         System.out.println("Connecting to " + this.hikariConfig.getJdbcUrl());
-        this.hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
         this.hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         this.hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         this.hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -64,31 +61,22 @@ public class MySQL {
     }
 
     public void setupTable() {
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
+        try (final @NotNull Connection connection = Objects.requireNonNull(this.hikariDataSource).getConnection()) {
             Statement statement = connection.createStatement();
-            Objects.requireNonNull(statement).executeUpdate("CREATE TABLE IF NOT EXISTS " + this.table + " (UUID VARCHAR(100), PlayerName VARCHAR(40))");
-            DatabaseMetaData dm = connection.getMetaData();
-            ResultSet points = dm.getColumns(null, null, this.table, "Credits");
-            if (!points.next()) {
-                statement.executeUpdate("ALTER TABLE " + this.table + " ADD COLUMN Credits int AFTER PlayerName;");
-            }
-            ResultSet bpoints = dm.getColumns(null, null, this.table, "BungeeCredits");
-            if (!bpoints.next()) {
-                statement.executeUpdate("ALTER TABLE " + this.table + " ADD COLUMN BungeeCredits int AFTER Credits;");
-            }
+            Objects.requireNonNull(statement).executeUpdate(String.format("CREATE TABLE IF NOT EXISTS %s (UUID CHAR(36) UNIQUE, Credits INT DEFAULT 0, PRIMARY KEY (UUID));", this.table));
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Map<UUID, TopPlayer> getTop() {
-        Map<UUID, TopPlayer> top = new HashMap<>();
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
-            ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM " + this.table + " ORDER BY Credits DESC");
+    public HashMap<UUID, Integer> getTop() {
+        HashMap<UUID, Integer> top = new HashMap<>();
+        try (final @NotNull Connection connection = Objects.requireNonNull(this.hikariDataSource).getConnection()) {
+            ResultSet resultSet = connection.createStatement().executeQuery(String.format("SELECT * FROM %s ORDER BY Credits DESC;", this.table));
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    top.put(UUID.fromString(resultSet.getString("UUID")), new TopPlayer(resultSet.getString("PlayerName"), resultSet.getInt("Credits")));
+                    top.put(UUID.fromString(resultSet.getString("UUID")), resultSet.getInt("Credits"));
                 }
             }
         } catch (SQLException e) {
@@ -98,9 +86,10 @@ public class MySQL {
     }
 
     public boolean playerExists(UUID uuid) {
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + this.table + " WHERE UUID='" + uuid.toString() + "'");
+        try (final @NotNull Connection connection = Objects.requireNonNull(this.hikariDataSource).getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(String.format("SELECT * FROM %s WHERE UUID = ?;", this.table));
+            stmt.setString(1, uuid.toString());
+            ResultSet rs = stmt.executeQuery();
             return (rs != null && rs.next()) && rs.getString("UUID") != null;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -108,51 +97,48 @@ public class MySQL {
         }
     }
 
-    public void createPlayer(UUID uuid, String playerName) {
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
-            if (!this.playerExists(uuid)) {
-                connection.createStatement().executeUpdate("INSERT INTO " + this.table + " (UUID, PlayerName, Credits, BungeeCredits) VALUES ('" + uuid + "', '" + playerName + "', '0', '0');");
-            }
+    public void addPoints(UUID uuid, int points) {
+        this.setPoints(uuid, this.getPoints(uuid) + points);
+    }
+
+    public void setPoints(UUID uuid, int points) {
+        try (final @NotNull Connection connection = Objects.requireNonNull(this.hikariDataSource).getConnection()) {
+            points += this.getPoints(uuid);
+
+            PreparedStatement statement = connection.prepareStatement(String.format("INSERT INTO %s (UUID, Credits) VALUES(?, ?) ON DUPLICATE KEY UPDATE Credits=?;", this.table));
+            statement.setString(1, uuid.toString());
+            statement.setInt(2, points);
+            statement.setInt(3, points);
+
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void addPoints(UUID uuid, String playerName, int points) {
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
-            points += this.getPoints(uuid, playerName);
-
-            connection.createStatement().executeUpdate("UPDATE " + this.table + " SET BungeeCredits='" + points + "' WHERE UUID='" + uuid + "';");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setPoints(UUID uuid, String playerName, int points) {
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
-            connection.createStatement().executeUpdate("UPDATE " + this.table + " SET BungeeCredits='" + points + "' WHERE UUID='" + uuid + "';");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public int getPoints(UUID uuid, String playerName) {
-        try (final @NotNull Connection connection = this.hikariDataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM " + this.table + " WHERE UUID='" + uuid + "'");
+    public int getPoints(UUID uuid) {
+        try (final @NotNull Connection connection = Objects.requireNonNull(this.hikariDataSource).getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(String.format("SELECT * FROM %s WHERE UUID = ?;", this.table));
+            stmt.setString(1, uuid.toString());
+            ResultSet resultSet = stmt.executeQuery();
             if (resultSet != null && resultSet.next()) {
-                return resultSet.getInt("BungeeCredits");
+                return resultSet.getInt("Credits");
+            } else {
+                return 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            this.createPlayer(uuid, playerName);
+            if (!e.getMessage().equals("Illegal operation on empty result set.") && !e.getMessage().equals("ResultSet closed")) {
+                e.printStackTrace();
+            }
+            return 0;
         }
-        return 0;
     }
 
 
     public void close() {
-        this.hikariDataSource.close();
+        if (this.hikariDataSource != null) {
+            this.hikariDataSource.close();
+        }
         instance = null;
     }
 
