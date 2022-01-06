@@ -8,18 +8,17 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 public class LoginListener implements Listener {
-
     @EventHandler
     public void onLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
 
-        Main.getInstance().getSchedulers().put(player.getUniqueId(), System.currentTimeMillis());
+        Main.getInstance().getJoinTimeMillis().put(player.getUniqueId(), System.currentTimeMillis());
     }
 
     @EventHandler
     public void onDisconnect(PlayerDisconnectEvent event) {
         ProxiedPlayer player = event.getPlayer();
 
-        Main.getInstance().getSchedulers().remove(player.getUniqueId());
+        Main.getInstance().getJoinTimeMillis().remove(player.getUniqueId());
     }
 }

@@ -14,21 +14,18 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
-
     @Getter
     private static Main instance;
     @Getter
-    private final ConfigUtils configUtils;
+    private final ConfigUtils configUtils = new ConfigUtils();
     @Getter
-    private final Map<UUID, Long> schedulers = new HashMap<>();
+    private final Map<UUID, Long> joinTimeMillis = new HashMap<>();
+    @Getter
+    private final Map<UUID, Long> lastPaidMillis = new HashMap<>();
     @Getter
     private MySQL mySQL;
 
-    public Main() {
-        this.configUtils = new ConfigUtils();
-    }
-
-    public static String Color(String message) {
+    public static String replaceAmpersand(String message) {
         return message.replace("&", "§");
     }
 
@@ -37,15 +34,13 @@ public class Main extends Plugin {
         instance = this;
         ConfigCreator.get().setupBungee(this, "Settings");
 
-        if (this.configUtils.getConfig("Settings").getBoolean("MySQL.Enable")) {
-            String host = this.configUtils.getConfig("Settings").getString("MySQL.Host");
-            int port = this.configUtils.getConfig("Settings").getInt("MySQL.Port");
-            String database = this.configUtils.getConfig("Settings").getString("MySQL.Database");
-            String username = this.configUtils.getConfig("Settings").getString("MySQL.Username");
-            String password = this.configUtils.getConfig("Settings").getString("MySQL.Password");
-            String tableName = this.configUtils.getConfig("Settings").getString("MySQL.TableName");
-            this.mySQL = new MySQL(host, port, database, username, password, tableName);
-        }
+        String host = this.configUtils.getConfig("Settings").getString("MySQL.Host");
+        int port = this.configUtils.getConfig("Settings").getInt("MySQL.Port");
+        String database = this.configUtils.getConfig("Settings").getString("MySQL.Database");
+        String username = this.configUtils.getConfig("Settings").getString("MySQL.Username");
+        String password = this.configUtils.getConfig("Settings").getString("MySQL.Password");
+        String tableName = this.configUtils.getConfig("Settings").getString("MySQL.TableName");
+        this.mySQL = new MySQL(host, port, database, username, password, tableName);
 
         this.getProxy().getPluginManager().registerListener(this, new LoginListener());
         this.getProxy().getScheduler().schedule(this, new CountTask(), 10L, 10L, TimeUnit.SECONDS);
@@ -56,5 +51,6 @@ public class Main extends Plugin {
         if (this.mySQL != null && this.mySQL.running()) {
             this.mySQL.close();
         }
+        this.joinTimeMillis.clear();
     }
 }
