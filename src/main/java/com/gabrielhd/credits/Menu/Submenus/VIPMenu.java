@@ -3,7 +3,7 @@ package com.gabrielhd.credits.Menu.Submenus;
 import com.gabrielhd.credits.Main;
 import com.gabrielhd.credits.Managers.ConfigManager;
 import com.gabrielhd.credits.Menu.Menu;
-import com.gabrielhd.credits.Player.CPlayer;
+import com.gabrielhd.credits.Player.CachedCreditPlayer;
 import com.gabrielhd.credits.Util.ItemsBuild;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
@@ -38,7 +38,7 @@ public class VIPMenu extends Menu {
             return;
         }
         FileConfiguration config = ConfigManager.getSettings();
-        CPlayer playerData = Main.getPlayerManager().getCPlayer(player);
+        CachedCreditPlayer playerData = Main.getPlayerManager().getCPlayer(player);
         if (playerData != null) {
             for (int i = 0; i < 54; i++) {
                 if (config.isSet("Menu.Contents." + i) && config.isSet("Menu.Contents." + i + ".Price")) {
@@ -70,7 +70,7 @@ public class VIPMenu extends Menu {
                 }
                 Material material = Material.getMaterial(config.getString("Menu.Contents." + i + ".ID"));
                 if (material != null) {
-                    this.setItem(config.getInt("Menu.Contents." + i + ".Slot"), ItemsBuild.crearItem(material, 1, config.getInt("Menu.Contents." + i + ".Data"), config.getString("Menu.Contents." + i + ".Name"), lore, config.getBoolean("Menu.Contents." + i + ".Glow")));
+                    this.setItem(config.getInt("Menu.Contents." + i + ".Slot"), ItemsBuild.createItem(material, 1, config.getInt("Menu.Contents." + i + ".Data"), config.getString("Menu.Contents." + i + ".Name"), lore, config.getBoolean("Menu.Contents." + i + ".Glow")));
                 } else {
                     System.out.println("Material null in " + i + " section");
                 }

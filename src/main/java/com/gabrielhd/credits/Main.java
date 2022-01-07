@@ -7,7 +7,6 @@ import com.gabrielhd.credits.Hook.PlaceholderAPIHook;
 import com.gabrielhd.credits.Listeners.LoginListener;
 import com.gabrielhd.credits.Managers.ConfigManager;
 import com.gabrielhd.credits.Managers.PlayerManager;
-import com.gabrielhd.credits.Tasks.SaveDataTask;
 import com.gabrielhd.credits.Tasks.TopTask;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,8 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class Main extends JavaPlugin {
 
@@ -52,7 +49,6 @@ public class Main extends JavaPlugin {
 
         this.getCommand("creditos").setExecutor(new CreditsCmd());
         this.getServer().getPluginManager().registerEvents(new LoginListener(), this);
-        this.getServer().getScheduler().runTaskTimerAsynchronously(Main.getInstance(), new SaveDataTask(), 1200L, 1200L);
         this.getServer().getScheduler().runTaskTimerAsynchronously(Main.getInstance(), new TopTask(), 1200L, 1200L);
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

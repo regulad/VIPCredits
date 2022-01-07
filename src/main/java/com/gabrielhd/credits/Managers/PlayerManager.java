@@ -1,8 +1,7 @@
 package com.gabrielhd.credits.Managers;
 
-import com.gabrielhd.common.MySQL;
 import com.gabrielhd.credits.Main;
-import com.gabrielhd.credits.Player.CPlayer;
+import com.gabrielhd.credits.Player.CachedCreditPlayer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,29 +9,27 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerManager {
+    private final Map<UUID, CachedCreditPlayer> players = new ConcurrentHashMap<>(200);
 
-    @Getter
-    private final Map<UUID, CPlayer> players = new HashMap<>();
-
-    public CPlayer getCPlayer(Player player) {
+    public CachedCreditPlayer getCPlayer(Player player) {
         return this.players.get(player.getUniqueId());
     }
 
     public void createCPlayer(Player player) {
-        CPlayer cPlayer = new CPlayer(player);
+        CachedCreditPlayer cachedCreditPlayer = new CachedCreditPlayer(player);
         if (!this.players.containsKey(player.getUniqueId())) {
-            this.players.put(player.getUniqueId(), cPlayer);
+            this.players.put(player.getUniqueId(), cachedCreditPlayer);
         }
     }
 
     public void removeCPlayer(Player player) {
         if (this.players.containsKey(player.getUniqueId())) {
-            CPlayer cPlayer = this.players.get(player.getUniqueId());
+            CachedCreditPlayer cachedCreditPlayer = this.players.get(player.getUniqueId());
 
-            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () ->
-                    MySQL.getInstance().setPoints(player.getUniqueId(), player.getName(), cPlayer.getCredits()));
+            cachedCreditPlayer.commit();
 
             this.players.remove(player.getUniqueId());
         }

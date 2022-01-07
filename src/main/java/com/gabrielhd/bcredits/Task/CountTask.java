@@ -1,7 +1,6 @@
 package com.gabrielhd.bcredits.Task;
 
 import com.gabrielhd.bcredits.Main;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import org.jetbrains.annotations.NotNull;
@@ -28,15 +27,15 @@ public class CountTask implements Runnable {
                 final long minsSinceLastPaid = TimeUnit.MILLISECONDS.toMinutes(sinceLastPaidMillis);
 
                 if (minsSinceLastPaid >= countTime) {
-                    final Runnable setPoints = () -> {
+                    main.getProxy().getScheduler().runAsync(main, () -> {
                         final int existingPoints = main.getMySQL().getPoints(player.getUniqueId());
+
                         main.getMySQL().setPoints(player.getUniqueId(), player.getName(), existingPoints + countReward);
-                    };
-                    Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), setPoints);
 
-                    player.sendMessage(Main.replaceAmpersand(config.getString("CreditsReceived")));
+                        player.sendMessage(Main.replaceAmpersand(config.getString("CreditsReceived")));
 
-                    main.getLastPaidMillis().put(player.getUniqueId(), System.currentTimeMillis());
+                        main.getLastPaidMillis().put(player.getUniqueId(), System.currentTimeMillis());
+                    });
                 }
             }
         }

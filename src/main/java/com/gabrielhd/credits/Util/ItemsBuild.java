@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemsBuild {
-
-    public static ItemStack crearItem(Material material, int amount, int data, String name, List<String> lore, boolean glow) {
+    public static ItemStack createItem(Material material, int amount, int data, String name, List<String> lore, boolean glow) {
         ItemStack item = new ItemStack(material, amount);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(Main.Color(name));

@@ -43,7 +43,7 @@ public class Main extends Plugin {
         this.mySQL = new MySQL(host, port, database, username, password, tableName);
 
         this.getProxy().getPluginManager().registerListener(this, new LoginListener());
-        this.getProxy().getScheduler().schedule(this, new CountTask(), 10L, 10L, TimeUnit.SECONDS);
+        this.getProxy().getScheduler().schedule(this, new CountTask(), 1, 1, TimeUnit.MINUTES);
     }
 
     @Override
