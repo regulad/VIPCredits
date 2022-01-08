@@ -3,7 +3,6 @@ package com.gabrielhd.credits.Player;
 import com.gabrielhd.common.MySQL;
 import com.gabrielhd.credits.Main;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -23,14 +22,14 @@ public class CachedCreditPlayer {
         this.update();
     }
 
-    public void setCredits(int credits) {
-        this.credits = credits;
-        commit();
-    }
-
     public int getCredits() {
         update();
         return this.credits;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+        commit();
     }
 
     public void asyncUpdate() {

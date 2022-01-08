@@ -83,7 +83,8 @@ public class CreditsCmd implements CommandExecutor {
                         if (number >= 1) {
                             for (Player online : Bukkit.getOnlinePlayers()) {
                                 CachedCreditPlayer cachedCreditPlayer = Main.getPlayerManager().getCPlayer(online);
-                                if (cachedCreditPlayer != null) cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() + number);
+                                if (cachedCreditPlayer != null)
+                                    cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() + number);
                                 online.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.BroadcastGiveall")).replace("%amount%", String.valueOf(number)));
                             }
                         }
@@ -186,7 +187,8 @@ public class CreditsCmd implements CommandExecutor {
                 if (target != null && this.isInt(args[2])) {
                     int number = Integer.parseInt(args[2]);
                     CachedCreditPlayer cachedCreditPlayer = Main.getPlayerManager().getCPlayer(target);
-                    if (cachedCreditPlayer != null) cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() - number);
+                    if (cachedCreditPlayer != null)
+                        cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() - number);
                     player.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TakeCredits")).replace("%amount%", String.valueOf(number)).replace("%player%", target.getName()));
                 } else {
                     player.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.PlayerNotOnline")));
@@ -253,7 +255,8 @@ public class CreditsCmd implements CommandExecutor {
                         int number = Integer.parseInt(args[1]);
                         for (Player online : Bukkit.getOnlinePlayers()) {
                             CachedCreditPlayer cachedCreditPlayer = Main.getPlayerManager().getCPlayer(online);
-                            if (cachedCreditPlayer != null) cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() + number);
+                            if (cachedCreditPlayer != null)
+                                cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() + number);
                             online.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.BroadcastGiveall")).replace("%amount%", String.valueOf(number)));
                         }
                         return true;
@@ -327,7 +330,8 @@ public class CreditsCmd implements CommandExecutor {
                 if (target != null && this.isInt(args[2])) {
                     int number = Integer.parseInt(args[2]);
                     CachedCreditPlayer cachedCreditPlayer = Main.getPlayerManager().getCPlayer(target);
-                    if (cachedCreditPlayer != null) cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() - number);
+                    if (cachedCreditPlayer != null)
+                        cachedCreditPlayer.setCredits(cachedCreditPlayer.getCredits() - number);
                     sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.TakeCredits")).replace("%amount%", String.valueOf(number)).replace("%player%", target.getName()));
                 } else {
                     sender.sendMessage(Main.Color(ConfigManager.getSettings().getString("Messages.PlayerNotOnline")));

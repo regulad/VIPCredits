@@ -1,12 +1,8 @@
 package com.gabrielhd.credits.Managers;
 
-import com.gabrielhd.credits.Main;
 import com.gabrielhd.credits.Player.CachedCreditPlayer;
-import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
